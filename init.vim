@@ -1,6 +1,3 @@
-set runtimepath+=C:\Users\Soeren\.vim
-set runtimepath+=C:\ProgramData\chocolatey\lib\fzf\tools
-
 set encoding=utf-8
 set fileencoding=utf-8
 
@@ -9,7 +6,7 @@ set fileencoding=utf-8
 " =>  Plugins
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-call plug#begin('~/.vim/sources')
+call plug#begin()
 
 " Completions
 
@@ -33,15 +30,15 @@ Plug 'yegappan/mru'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': 'sh ./install --all' }
 Plug 'junegunn/fzf.vim'
 
-" Clojure
+" " Clojure
 
-Plug 'tpope/vim-fireplace'
-Plug 'luochen1990/rainbow'
-Plug 'guns/vim-sexp'
-Plug 'tpope/vim-sexp-mappings-for-regular-people'
-Plug 'venantius/vim-cljfmt'
-Plug 'bhurlow/vim-parinfer'
-Plug 'tpope/vim-salve'
+" Plug 'tpope/vim-fireplace'
+" Plug 'luochen1990/rainbow'
+" Plug 'guns/vim-sexp'
+" Plug 'tpope/vim-sexp-mappings-for-regular-people'
+" Plug 'venantius/vim-cljfmt'
+" Plug 'bhurlow/vim-parinfer'
+" Plug 'tpope/vim-salve'
 
 " Utillities
 
@@ -897,11 +894,11 @@ let g:NERDTreeDirArrowCollapsible = '▾'
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Terminal
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-set term=pcansi
-set t_Co=256
-let &t_AB="\e[48;5;%dm"
-let &t_AF="\e[38;5;%dm"
-set bs=indent,eol,start
+" set term=xterm
+" set t_Co=256
+" let &t_AB="\e[48;5;%dm"
+" let &t_AF="\e[38;5;%dm"
+" set bs=indent,eol,start
 colorscheme iceberg
 set background=dark
 
