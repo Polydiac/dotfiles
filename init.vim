@@ -11,10 +11,12 @@ call plug#begin()
 " Completions
 
 Plug 'mattn/emmet-vim'
-Plug 'jiangmiao/auto-pairs'
+" Plug 'jiangmiao/auto-pairs'
+Plug 'Raimondi/delimitMate'
 Plug 'SirVer/ultisnips'
-Plug 'maralla/completor.vim'
 Plug 'honza/vim-snippets'
+" Plug 'valloric/youcompleteme'
+Plug 'davidhalter/jedi-vim'
 
 " Linters
 
@@ -42,6 +44,8 @@ Plug 'junegunn/fzf.vim'
 
 " Utillities
 
+Plug 'kassio/neoterm'
+
 Plug 'tpope/vim-sensible'
 
 Plug 'tpope/vim-commentary'
@@ -49,7 +53,10 @@ Plug 'tpope/vim-dispatch'
 Plug 'easymotion/vim-easymotion'
 
 Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-rhubarb'
+
 Plug 'ludovicchabant/vim-gutentags'
+Plug 'majutsushi/tagbar'
 
 Plug 'vim-pandoc/vim-pandoc'
 Plug 'plasticboy/vim-markdown'
@@ -69,15 +76,15 @@ Plug 'amix/open_file_under_cursor.vim'
 Plug 'godlygeek/tabular'
 Plug 'tomtom/tlib_vim'
 
-Plug 'majutsushi/tagbar'
-
 Plug 'Chiel92/vim-autoformat'
 Plug 'sbdchd/neoformat'
 
 Plug 'sheerun/vim-polyglot'
+Plug 'farfanoide/vim-kivy'
 
 " Astethics
 
+" Plug 'roman/golden-ratio'
 Plug 'itchyny/lightline.vim'
 Plug 'junegunn/goyo.vim'
 Plug 'amix/vim-zenroom2'
@@ -86,10 +93,11 @@ Plug 'ryanoasis/vim-devicons'
 
 " Colorschemes
 
+Plug 'joshdick/onedark.vim'
 Plug 'cocopon/iceberg.vim'
 Plug 'tomasr/molokai'
 Plug 'flazz/vim-colorschemes'
-Plug 'rakr/vim-one'
+" Plug 'rakr/vim-one'
 
 call plug#end()
 
@@ -184,12 +192,6 @@ if $COLORTERM == 'gnome-terminal'
     set t_Co=256
 endif
 
-try
-    colorscheme desert
-catch
-endtry
-
-set background=dark
 
 " Set extra options when running in GUI mode
 if has("gui_running")
@@ -593,7 +595,6 @@ endfunction
 " => Python section
 """"""""""""""""""""""""""""""
 let python_highlight_all = 1
-au FileType python syn keyword pythonDecorator True None False self
 
 " au BufNewFile,BufRead *.py
 "     \ set tabstop=4
@@ -606,20 +607,6 @@ au FileType python syn keyword pythonDecorator True None False self
 
 au BufNewFile,BufRead *.jinja set syntax=htmljinja
 au BufNewFile,BufRead *.mako set ft=mako
-
-au FileType python map <buffer> F set foldmethod=indent<cr>
-
-au FileType python inoremap <buffer> $r return 
-au FileType python inoremap <buffer> $i import 
-au FileType python inoremap <buffer> $p print 
-au FileType python inoremap <buffer> $f #--- <esc>a
-au FileType python map <buffer> <leader>1 /class 
-au FileType python map <buffer> <leader>2 /def 
-au FileType python map <buffer> <leader>C ?class 
-au FileType python map <buffer> <leader>D ?def 
-au FileType python set cindent
-au FileType python set cinkeys-=0#
-au FileType python set indentkeys-=0#
 
 
 """"""""""""""""""""""""""""""
@@ -703,7 +690,7 @@ au FileType mako vmap Si S"i${ _(<esc>2f"a) }<esc>
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 let g:lightline = {
-      \ 'colorscheme': 'wombat',
+      \ 'colorscheme': 'onedark',
       \ 'mode_map': { 'c': 'NORMAL' },
       \ 'active': {
       \   'left': [ [ 'mode', 'paste' ], [ 'fugitive', 'filename' ], [ 'ale' ]],
@@ -813,7 +800,6 @@ nnoremap <silent> <leader>z :Goyo<cr>
 let g:go_fmt_command = "goimports"
 
 
-
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Git gutter (Git diff)
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -825,13 +811,15 @@ nnoremap <silent> <leader>d :GitGutterToggle<cr>
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let g:rainbow_active = 1 
 
+let g:tagbar_ctags_bin = 'C:\Program Files\ctags\ctags.exe'
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Ale
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let g:ale_sign_column_always = 1
 let g:ale_statusline_format = ['⨯ %d', ' %d', '◆ ok']
-
+let g:ale_fixers = { 'python': ['yapf'] }
+let g:ale_linters = { 'python': ['flake8', 'mypy'] }
 
 set noshowmode
 
@@ -840,8 +828,8 @@ let g:ctrlp_show_hidden = 0
 
 " better key bindings for UltiSnipsExpandTrigger
 " let g:UltiSnipsExpandTrigger = "<tab>"
-" let g:UltiSnipsJumpForwardTrigger = "<tab>"
-" let g:UltiSnipsJumpBackwardTrigger = "<s-tab>"
+let g:UltiSnipsJumpForwardTrigger = "<c-tab>"
+let g:UltiSnipsJumpBackwardTrigger = "<s-tab>"
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -852,6 +840,7 @@ inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 inoremap <expr> <cr> pumvisible() ? "\<C-y>\<cr>" : "\<cr>"
 
 let g:completor_python_binary = 'C:\Program Files\Python35'
+let g:completor_debug=1
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Emmet
@@ -872,7 +861,7 @@ import os
 import sys
 if 'VIRTUAL_ENV' in os.environ:
   project_base_dir = os.environ['VIRTUAL_ENV']
-  activate_this = os.path.join(project_base_dir, 'bin/activate_this.py')
+  activate_this = os.path.join(project_base_dir, 'Scripts\\activate_this.py')
   execfile(activate_this, dict(__file__=activate_this))
 EOF
 
@@ -889,20 +878,26 @@ let g:NERDTreeDirArrowExpandable = '▸'
 let g:NERDTreeDirArrowCollapsible = '▾'
 
 
-
-
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Terminal
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" set term=xterm
-" set t_Co=256
-" let &t_AB="\e[48;5;%dm"
-" let &t_AF="\e[38;5;%dm"
-" set bs=indent,eol,start
 colorscheme iceberg
+" set term=pcansi
+if !has("gui_running")
+	set term=xterm
+	set t_Co=256
+	let &t_AB="\e[48;5;%dm"
+	let &t_AF="\e[38;5;%dm"
+	colorscheme onedark
+endif
+if has('nvim') || has('termguicolors')
+	set termguicolors
+endif	
+set bs=indent,eol,start
 set background=dark
 
-
+inoremap <Char-0x07F> <BS>
+nnoremap <Char-0x07F> <BS>
 
 au BufNewFile,BufRead,BufEnter   *.wiki    setlocal spell    spelllang=de_de
 au BufNewFile,BufRead,BufEnter   *.md      setlocal spell    spelllang=de_de
