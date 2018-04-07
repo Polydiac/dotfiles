@@ -3,7 +3,7 @@ set runtimepath+=C:\ProgramData\chocolatey\lib\fzf\tools
 
 set encoding=utf-8
 set fileencoding=utf-8
-
+set pyx=3
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " =>  Plugins
@@ -19,11 +19,32 @@ Plug 'Raimondi/delimitMate'
 Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
 " Plug 'valloric/youcompleteme'
-Plug 'davidhalter/jedi-vim'
+" Plug 'davidhalter/jedi-vim'
+" Plug 'fatih/vim-go'
+" Plug 'racer-rust/vim-racer'
+Plug 'zchee/deoplete-jedi'
+Plug 'zchee/deoplete-go'
+Plug 'sebastianmarkow/deoplete-rust'
+Plug 'Shougo/neco-syntax'
+Plug 'Shougo/neco-vim'
+
+if has('nvim')
+  Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+else
+  Plug 'Shougo/deoplete.nvim'
+  Plug 'roxma/nvim-yarp'
+  Plug 'roxma/vim-hug-neovim-rpc'
+endif
+
+Plug 'autozimu/LanguageClient-neovim', {
+    \ 'branch': 'next',
+    \ 'do': 'install.ps1',
+    \ }
 
 " Linters
 
 Plug 'w0rp/ale'
+" Plug 'maximbaz/lightline-ale'
 
 " Finding
 
@@ -63,6 +84,8 @@ Plug 'majutsushi/tagbar'
 
 Plug 'vim-pandoc/vim-pandoc'
 Plug 'plasticboy/vim-markdown'
+Plug 'vim-pandoc/vim-pandoc-syntax'
+Plug 'reedes/vim-pencil'
 
 Plug 'terryma/vim-multiple-cursors'
 Plug 'tpope/vim-repeat'
@@ -90,12 +113,15 @@ Plug 'farfanoide/vim-kivy'
 " Plug 'roman/golden-ratio'
 Plug 'itchyny/lightline.vim'
 Plug 'junegunn/goyo.vim'
+Plug 'junegunn/limelight.vim'
 Plug 'amix/vim-zenroom2'
 Plug 'airblade/vim-gitgutter'
 Plug 'ryanoasis/vim-devicons'
 
 " Colorschemes
 
+Plug 'arcticicestudio/nord-vim'
+Plug 'cseelus/vim-colors-lucid'
 Plug 'joshdick/onedark.vim'
 Plug 'cocopon/iceberg.vim'
 Plug 'tomasr/molokai'
@@ -434,8 +460,8 @@ colorscheme peaksea
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Fast editing and reloading of vimrc configs
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-map <leader>e :e! ~/.vim_runtime/my_configs.vim<cr>
-autocmd! bufwritepost ~/.vim_runtime/my_configs.vim source ~/.vim_runtime/my_configs.vim
+map <leader>e :e! ~/.vim/vimrc.vim<cr>
+autocmd! bufwritepost ~/.vim/vimrc.vim source ~/.vim/vimrc.vim
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -443,7 +469,7 @@ autocmd! bufwritepost ~/.vim_runtime/my_configs.vim source ~/.vim_runtime/my_con
 "    means that you can undo even when you close a buffer/VIM
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 try
-    set undodir=~/.vim_runtime/temp_dirs/undodir
+    set undodir=~/.vim/temp_dirs/undodir
     set undofile
 catch
 endtry
@@ -469,11 +495,6 @@ cnoremap <C-K>		<C-U>
 
 cnoremap <C-P> <Up>
 cnoremap <C-N> <Down>
-
-" Map ½ to something useful
-map ½ $
-cmap ½ $
-imap ½ $
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -692,15 +713,22 @@ au FileType mako vmap Si S"i${ _(<esc>2f"a) }<esc>
 " => lightline
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
+let g:lightline#ale#indicator_warnings = "\uf071"
+let g:lightline#ale#indicator_errors = "\uf05e"
+let g:lightline#ale#indicator_ok = "\uf00c"
+
 let g:lightline = {
       \ 'colorscheme': 'onedark',
       \ 'mode_map': { 'c': 'NORMAL' },
       \ 'active': {
-      \   'left': [ [ 'mode', 'paste' ], [ 'fugitive', 'filename' ], [ 'ale' ]],
+      \   'left': [ [ 'mode', 'paste' ], [ 'fugitive', 'filename', 'linter_errors', 'linter_warnings' ]],
       \   'right': [[ 'percent', 'lineinfo' ], [ 'filetype' ], [ 'fileformat', 'fileencoding' ] ]
       \ },
       \ 'component': {
       \   'lineinfo': ' %3l:%-2v',
+	  \  'linter_warnings': 'lightline#ale#warnings',
+      \  'linter_errors': 'lightline#ale#errors',
+      \  'linter_ok': 'lightline#ale#ok',
       \ },
       \ 'component_type': {
       \   'ale': 'error',
@@ -717,9 +745,22 @@ let g:lightline = {
       \   'fileencoding': 'LightlineFileencoding',
       \   'mode': 'LightlineMode',
       \ },
-      \ 'separator': { 'left': "\ue0b0", 'right': "\ue0b2" },
-      \ 'subseparator': { 'left': '\ue0b1', 'right': '\ue0b3' }
+      \ 'separator': { 'left': "\ue0bc", 'right': "\ue0be" },
+      \ 'subseparator': { 'left': '\ue0bd', 'right': '\ue0bf' }
       \ }
+
+let g:lightline.component_expand = {
+      \  'linter_warnings': 'lightline#ale#warnings',
+      \  'linter_errors': 'lightline#ale#errors',
+      \  'linter_ok': 'lightline#ale#ok',
+      \ }
+
+let g:lightline.component_type = {
+      \     'linter_warnings': 'warning',
+      \     'linter_errors': 'error',
+      \     'linter_ok': 'left',
+      \ }
+
 
 function! LightlineModified()
   if &filetype == "help"
@@ -795,6 +836,8 @@ let g:goyo_width=100
 let g:goyo_margin_top = 2
 let g:goyo_margin_bottom = 2
 nnoremap <silent> <leader>z :Goyo<cr>
+autocmd! User GoyoEnter Limelight
+autocmd! User GoyoLeave Limelight!
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -880,6 +923,46 @@ imap <C-v> <Esc>"+pa
 let g:NERDTreeDirArrowExpandable = '▸'
 let g:NERDTreeDirArrowCollapsible = '▾'
 
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Deoplete
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+set hidden
+" let g:racer_cmd = "C:\\Users\\Soeren\\.cargo\\bin"
+" let g:racer_experimental_completer = 1
+
+let g:deoplete#sources#rust#racer_binary='C:\\Users\\Soeren\\.cargo\\bin\\racer.exe'
+let g:deoplete#sources#rust#rust_source_path='C:\\Users\\Soeren\\.rustup\\toolchains\\stable-x86_64-pc-windows-msvc\\lib\\rustlib\\src\\rust\\src'
+
+let g:python3_host_prog = "C:\\Program Files\\Python35\\python.exe"
+
+let g:deoplete#enable_at_startup = 1
+
+call deoplete#custom#set('ultisnips', 'matchers', ['matcher_fuzzy'])
+
+" Required for operations modifying multiple buffers like rename.
+set hidden
+
+let g:LanguageClient_serverCommands = {
+    \ 'rust': ['rustup', 'run', 'nightly', 'rls'],
+	\ 'python': ['pyls'],
+	\ 'go': []
+    \ }
+
+nnoremap <silent> K :call LanguageClient_textDocument_hover()<CR>
+nnoremap <silent> gd :call LanguageClient_textDocument_definition()<CR>
+nnoremap <silent> <F2> :call LanguageClient_textDocument_rename()<CR>
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Whitespace
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+" Shortcut to rapidly toggle `set list`
+nmap <leader>l :set list!<CR>
+
+" Use the same symbols as TextMate for tabstops and EOLs
+set listchars=tab:▸\ ,eol:¬
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Terminal
