@@ -19,27 +19,30 @@ Plug 'Raimondi/delimitMate'
 Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
 " Plug 'valloric/youcompleteme'
-" Plug 'davidhalter/jedi-vim'
+Plug 'davidhalter/jedi-vim'
 " Plug 'fatih/vim-go'
-" Plug 'racer-rust/vim-racer'
-Plug 'zchee/deoplete-jedi'
-Plug 'zchee/deoplete-go'
-Plug 'sebastianmarkow/deoplete-rust'
+Plug 'racer-rust/vim-racer'
+" Plug 'zchee/deoplete-jedi'
+" Plug 'zchee/deoplete-go'
+" Plug 'sebastianmarkow/deoplete-rust'
 Plug 'Shougo/neco-syntax'
 Plug 'Shougo/neco-vim'
+" Plug 'artur-shaik/vim-javacomplete2'
 
-if has('nvim')
-  Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-else
-  Plug 'Shougo/deoplete.nvim'
-  Plug 'roxma/nvim-yarp'
-  Plug 'roxma/vim-hug-neovim-rpc'
-endif
+" Plug 'autozimu/LanguageClient-neovim', {
+"     \ 'branch': 'next',
+"     \ 'do': 'powershell -executionpolicy bypass -File install.ps1',
+"     \ }
 
-Plug 'autozimu/LanguageClient-neovim', {
-    \ 'branch': 'next',
-    \ 'do': 'install.ps1',
-    \ }
+
+" if has('nvim')
+"   Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+" else
+"   Plug 'Shougo/deoplete.nvim'
+"   Plug 'roxma/nvim-yarp'
+"   Plug 'roxma/vim-hug-neovim-rpc'
+" endif
+
 
 " Linters
 
@@ -76,6 +79,7 @@ Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-dispatch'
 Plug 'easymotion/vim-easymotion'
 
+Plug 'jreybert/vimagit'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-rhubarb'
 
@@ -885,7 +889,7 @@ inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
 inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 inoremap <expr> <cr> pumvisible() ? "\<C-y>\<cr>" : "\<cr>"
 
-let g:completor_python_binary = 'C:\Program Files\Python35'
+let g:completor_python_binary = 'C:\Program Files\Python36'
 let g:completor_debug=1
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -927,7 +931,6 @@ let g:NERDTreeDirArrowCollapsible = '▾'
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Deoplete
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
 set hidden
 " let g:racer_cmd = "C:\\Users\\Soeren\\.cargo\\bin"
 " let g:racer_experimental_completer = 1
@@ -935,11 +938,11 @@ set hidden
 let g:deoplete#sources#rust#racer_binary='C:\\Users\\Soeren\\.cargo\\bin\\racer.exe'
 let g:deoplete#sources#rust#rust_source_path='C:\\Users\\Soeren\\.rustup\\toolchains\\stable-x86_64-pc-windows-msvc\\lib\\rustlib\\src\\rust\\src'
 
-let g:python3_host_prog = "C:\\Program Files\\Python35\\python.exe"
+let g:python3_host_prog = "C:\\Program Files\\Python36\\python.exe"
 
 let g:deoplete#enable_at_startup = 1
 
-call deoplete#custom#set('ultisnips', 'matchers', ['matcher_fuzzy'])
+call deoplete#custom#source('ultisnips', 'matchers', ['matcher_fuzzy'])
 
 " Required for operations modifying multiple buffers like rename.
 set hidden
@@ -963,6 +966,43 @@ nmap <leader>l :set list!<CR>
 
 " Use the same symbols as TextMate for tabstops and EOLs
 set listchars=tab:▸\ ,eol:¬
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => javacomplete
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+nmap <leader>jI <Plug>(JavaComplete-Imports-AddMissing)
+nmap <leader>jR <Plug>(JavaComplete-Imports-RemoveUnused)
+nmap <leader>ji <Plug>(JavaComplete-Imports-AddSmart)
+nmap <leader>jii <Plug>(JavaComplete-Imports-Add)
+
+imap <C-j>I <Plug>(JavaComplete-Imports-AddMissing)
+imap <C-j>R <Plug>(JavaComplete-Imports-RemoveUnused)
+imap <C-j>i <Plug>(JavaComplete-Imports-AddSmart)
+imap <C-j>ii <Plug>(JavaComplete-Imports-Add)
+
+nmap <leader>jM <Plug>(JavaComplete-Generate-AbstractMethods)
+
+imap <C-j>jM <Plug>(JavaComplete-Generate-AbstractMethods)
+
+nmap <leader>jA <Plug>(JavaComplete-Generate-Accessors)
+nmap <leader>js <Plug>(JavaComplete-Generate-AccessorSetter)
+nmap <leader>jg <Plug>(JavaComplete-Generate-AccessorGetter)
+nmap <leader>ja <Plug>(JavaComplete-Generate-AccessorSetterGetter)
+nmap <leader>jts <Plug>(JavaComplete-Generate-ToString)
+nmap <leader>jeq <Plug>(JavaComplete-Generate-EqualsAndHashCode)
+nmap <leader>jc <Plug>(JavaComplete-Generate-Constructor)
+nmap <leader>jcc <Plug>(JavaComplete-Generate-DefaultConstructor)
+
+imap <C-j>s <Plug>(JavaComplete-Generate-AccessorSetter)
+imap <C-j>g <Plug>(JavaComplete-Generate-AccessorGetter)
+imap <C-j>a <Plug>(JavaComplete-Generate-AccessorSetterGetter)
+
+vmap <leader>js <Plug>(JavaComplete-Generate-AccessorSetter)
+vmap <leader>jg <Plug>(JavaComplete-Generate-AccessorGetter)
+vmap <leader>ja <Plug>(JavaComplete-Generate-AccessorSetterGetter)
+
+nmap <silent> <buffer> <leader>jn <Plug>(JavaComplete-Generate-NewClass)
+nmap <silent> <buffer> <leader>jN <Plug>(JavaComplete-Generate-ClassInFile)
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Terminal
