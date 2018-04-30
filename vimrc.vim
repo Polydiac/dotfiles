@@ -931,31 +931,31 @@ let g:NERDTreeDirArrowCollapsible = '▾'
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Deoplete
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-set hidden
-" let g:racer_cmd = "C:\\Users\\Soeren\\.cargo\\bin"
-" let g:racer_experimental_completer = 1
+" set hidden
+" " let g:racer_cmd = "C:\\Users\\Soeren\\.cargo\\bin"
+" " let g:racer_experimental_completer = 1
 
-let g:deoplete#sources#rust#racer_binary='C:\\Users\\Soeren\\.cargo\\bin\\racer.exe'
-let g:deoplete#sources#rust#rust_source_path='C:\\Users\\Soeren\\.rustup\\toolchains\\stable-x86_64-pc-windows-msvc\\lib\\rustlib\\src\\rust\\src'
+" let g:deoplete#sources#rust#racer_binary='C:\\Users\\Soeren\\.cargo\\bin\\racer.exe'
+" let g:deoplete#sources#rust#rust_source_path='C:\\Users\\Soeren\\.rustup\\toolchains\\stable-x86_64-pc-windows-msvc\\lib\\rustlib\\src\\rust\\src'
 
-let g:python3_host_prog = "C:\\Program Files\\Python36\\python.exe"
+" let g:python3_host_prog = "C:\\Program Files\\Python36\\python.exe"
 
-let g:deoplete#enable_at_startup = 1
+" let g:deoplete#enable_at_startup = 1
 
-call deoplete#custom#source('ultisnips', 'matchers', ['matcher_fuzzy'])
+" call deoplete#custom#source('ultisnips', 'matchers', ['matcher_fuzzy'])
 
-" Required for operations modifying multiple buffers like rename.
-set hidden
+" " Required for operations modifying multiple buffers like rename.
+" set hidden
 
-let g:LanguageClient_serverCommands = {
-    \ 'rust': ['rustup', 'run', 'nightly', 'rls'],
-	\ 'python': ['pyls'],
-	\ 'go': []
-    \ }
+" let g:LanguageClient_serverCommands = {
+"     \ 'rust': ['rustup', 'run', 'nightly', 'rls'],
+" 	\ 'python': ['pyls'],
+" 	\ 'go': []
+"     \ }
 
-nnoremap <silent> K :call LanguageClient_textDocument_hover()<CR>
-nnoremap <silent> gd :call LanguageClient_textDocument_definition()<CR>
-nnoremap <silent> <F2> :call LanguageClient_textDocument_rename()<CR>
+" nnoremap <silent> K :call LanguageClient_textDocument_hover()<CR>
+" nnoremap <silent> gd :call LanguageClient_textDocument_definition()<CR>
+" nnoremap <silent> <F2> :call LanguageClient_textDocument_rename()<CR>
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Whitespace
