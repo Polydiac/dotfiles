@@ -124,6 +124,7 @@ Plug 'ryanoasis/vim-devicons'
 
 " Colorschemes
 
+Plug 'drewtempelmeyer/palenight.vim'
 Plug 'arcticicestudio/nord-vim'
 Plug 'cseelus/vim-colors-lucid'
 Plug 'joshdick/onedark.vim'
@@ -723,7 +724,7 @@ let g:lightline#ale#indicator_ok = "\uf00c"
 
 let g:lightline = {
       \ 'colorscheme': 'onedark',
-      \ 'mode_map': { 'c': 'NORMAL' },
+	  \ 'mode_map': { 'c': 'NORMAL' },
       \ 'active': {
       \   'left': [ [ 'mode', 'paste' ], [ 'fugitive', 'filename', 'linter_errors', 'linter_warnings' ]],
       \   'right': [[ 'percent', 'lineinfo' ], [ 'filetype' ], [ 'fileformat', 'fileencoding' ] ]
@@ -765,6 +766,7 @@ let g:lightline.component_type = {
       \     'linter_ok': 'left',
       \ }
 
+" let g:lightline.colorscheme = 'palenight'
 
 function! LightlineModified()
   if &filetype == "help"
@@ -1013,7 +1015,9 @@ if !has("gui_running")
 	set t_Co=256
 	let &t_AB="\e[48;5;%dm"
 	let &t_AF="\e[38;5;%dm"
-	colorscheme onedark
+	" colorscheme onedark
+	colorscheme palenight
+	let g:lightline.colorscheme = 'palenight'
 endif
 if has('nvim') || has('termguicolors')
 	set termguicolors
