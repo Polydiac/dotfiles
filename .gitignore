@@ -1,4 +1,6 @@
 tags
 sources/
 temp_dirs/
-
+temp/
+tags.*
+.netrwhist
