@@ -13,20 +13,34 @@ call plug#begin('~/.vim/sources')
 
 " Completions
 
-Plug 'mattn/emmet-vim'
+" Plug 'mattn/emmet-vim'
 " Plug 'jiangmiao/auto-pairs'
 Plug 'Raimondi/delimitMate'
 Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
+
+""""""""""""""""""""""""""""""""""
+Plug 'prabirshrestha/asyncomplete.vim'
+Plug 'prabirshrestha/async.vim'
+Plug 'prabirshrestha/vim-lsp'
+
+Plug 'prabirshrestha/asyncomplete-lsp.vim'
+Plug 'prabirshrestha/asyncomplete-buffer.vim'
+Plug 'prabirshrestha/asyncomplete-file.vim'
+Plug 'prabirshrestha/asyncomplete-ultisnips.vim'
+Plug 'yami-beta/asyncomplete-omni.vim'
+
+
+"""""""""""""""""""""""""""""""""""""""
 " Plug 'valloric/youcompleteme'
-Plug 'davidhalter/jedi-vim'
+" Plug 'davidhalter/jedi-vim'
 " Plug 'fatih/vim-go'
-Plug 'racer-rust/vim-racer'
+" Plug 'racer-rust/vim-racer'
 " Plug 'zchee/deoplete-jedi'
 " Plug 'zchee/deoplete-go'
 " Plug 'sebastianmarkow/deoplete-rust'
-Plug 'Shougo/neco-syntax'
-Plug 'Shougo/neco-vim'
+" Plug 'Shougo/neco-syntax'
+" Plug 'Shougo/neco-vim'
 " Plug 'artur-shaik/vim-javacomplete2'
 
 " Plug 'autozimu/LanguageClient-neovim', {
@@ -46,13 +60,16 @@ Plug 'Shougo/neco-vim'
 
 " Linters
 
-Plug 'w0rp/ale'
+" Plug 'w0rp/ale'
 " Plug 'maximbaz/lightline-ale'
 
 " Finding
 
 Plug 'mileszs/ack.vim'
+
 Plug 'ctrlpvim/ctrlp.vim'
+Plug 'dbeecham/ctrlp-commandpalette.vim'
+
 Plug 'jlanzarotta/bufexplorer'
 Plug 'scrooloose/nerdtree'
 Plug 'yegappan/mru'
@@ -113,6 +130,10 @@ Plug 'sbdchd/neoformat'
 
 Plug 'sheerun/vim-polyglot'
 Plug 'farfanoide/vim-kivy'
+Plug 'gmoe/vim-faust'
+
+Plug 'tpope/vim-obsession'
+Plug 'dhruvasagar/vim-prosession'
 
 " Astethics
 
@@ -882,9 +903,75 @@ let g:ctrlp_show_hidden = 0
 
 " better key bindings for UltiSnipsExpandTrigger
 " let g:UltiSnipsExpandTrigger = "<tab>"
-let g:UltiSnipsJumpForwardTrigger = "<c-tab>"
-let g:UltiSnipsJumpBackwardTrigger = "<s-tab>"
+" let g:UltiSnipsJumpForwardTrigger = "<c-tab>"
+" let g:UltiSnipsJumpBackwardTrigger = "<s-tab>"
 
+
+
+" Asyncomplete
+"""""""""""""""""""""""""""
+inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
+inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<cr>"
+
+imap <c-space> <Plug>(asyncomplete_force_refresh)
+
+" let g:asyncomplete_remove_duplicates = 1
+
+"let g:asyncomplete_smart_completion = 1
+"let g:asyncomplete_auto_popup = 1
+
+set completeopt+=preview
+" autocmd! CompleteDone * if pumvisible() == 0 | pclose | endif
+
+
+
+"""""""""""""""""""""""""""""""""""
+" LSP
+"
+
+if executable('pyls')
+  " pip install python-language-server
+  au User lsp_setup call lsp#register_server({
+      \ 'name': 'pyls',
+      \ 'cmd': {server_info->['pyls']},
+      \ 'whitelist': ['python'],
+      \ })
+endif
+
+" Plug 'ryanolsonx/vim-lsp-python'
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Asyncomplete/Langserver
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+call asyncomplete#register_source(asyncomplete#sources#buffer#get_source_options({
+    \ 'name': 'buffer',
+    \ 'whitelist': ['*'],
+    \ 'blacklist': ['go'],
+    \ 'completor': function('asyncomplete#sources#buffer#completor'),
+    \ }))
+
+call asyncomplete#register_source(asyncomplete#sources#file#get_source_options({
+    \ 'name': 'file',
+    \ 'whitelist': ['*'],
+    \ 'priority': 10,
+    \ 'completor': function('asyncomplete#sources#file#completor')
+    \ }))
+
+let g:UltiSnipsExpandTrigger="<c-e>"
+call asyncomplete#register_source(asyncomplete#sources#ultisnips#get_source_options({
+	\ 'name': 'ultisnips',
+    \ 'whitelist': ['*'],
+    \ 'completor': function('asyncomplete#sources#ultisnips#completor'),
+    \ }))
+
+call asyncomplete#register_source(asyncomplete#sources#omni#get_source_options({
+  \ 'name': 'omni',
+  \ 'whitelist': ['*'],
+  \ 'completor': function('asyncomplete#sources#omni#completor'),
+  \ }))
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Emmet
@@ -932,42 +1019,6 @@ nmap <leader>l :set list!<CR>
 " Use the same symbols as TextMate for tabstops and EOLs
 set listchars=tab:▸\ ,eol:¬
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => javacomplete
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" nmap <leader>jI <Plug>(JavaComplete-Imports-AddMissing)
-" nmap <leader>jR <Plug>(JavaComplete-Imports-RemoveUnused)
-" nmap <leader>ji <Plug>(JavaComplete-Imports-AddSmart)
-" nmap <leader>jii <Plug>(JavaComplete-Imports-Add)
-
-" imap <C-j>I <Plug>(JavaComplete-Imports-AddMissing)
-" imap <C-j>R <Plug>(JavaComplete-Imports-RemoveUnused)
-" imap <C-j>i <Plug>(JavaComplete-Imports-AddSmart)
-" imap <C-j>ii <Plug>(JavaComplete-Imports-Add)
-
-" nmap <leader>jM <Plug>(JavaComplete-Generate-AbstractMethods)
-
-" imap <C-j>jM <Plug>(JavaComplete-Generate-AbstractMethods)
-
-" nmap <leader>jA <Plug>(JavaComplete-Generate-Accessors)
-" nmap <leader>js <Plug>(JavaComplete-Generate-AccessorSetter)
-" nmap <leader>jg <Plug>(JavaComplete-Generate-AccessorGetter)
-" nmap <leader>ja <Plug>(JavaComplete-Generate-AccessorSetterGetter)
-" nmap <leader>jts <Plug>(JavaComplete-Generate-ToString)
-" nmap <leader>jeq <Plug>(JavaComplete-Generate-EqualsAndHashCode)
-" nmap <leader>jc <Plug>(JavaComplete-Generate-Constructor)
-" nmap <leader>jcc <Plug>(JavaComplete-Generate-DefaultConstructor)
-
-" imap <C-j>s <Plug>(JavaComplete-Generate-AccessorSetter)
-" imap <C-j>g <Plug>(JavaComplete-Generate-AccessorGetter)
-" imap <C-j>a <Plug>(JavaComplete-Generate-AccessorSetterGetter)
-
-" vmap <leader>js <Plug>(JavaComplete-Generate-AccessorSetter)
-" vmap <leader>jg <Plug>(JavaComplete-Generate-AccessorGetter)
-" vmap <leader>ja <Plug>(JavaComplete-Generate-AccessorSetterGetter)
-
-" nmap <silent> <buffer> <leader>jn <Plug>(JavaComplete-Generate-NewClass)
-" nmap <silent> <buffer> <leader>jN <Plug>(JavaComplete-Generate-ClassInFile)
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Terminal
