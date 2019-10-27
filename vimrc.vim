@@ -17,6 +17,7 @@ call plug#begin('~/.vim/sources')
 
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
+Plug 'lervag/vimtex'
 
 " Plug 'mattn/emmet-vim'
 " Plug 'jiangmiao/auto-pairs'
@@ -114,8 +115,15 @@ Plug 'tpope/vim-rhubarb'
 Plug 'ludovicchabant/vim-gutentags'
 
 Plug 'vim-pandoc/vim-pandoc'
-Plug 'plasticboy/vim-markdown'
 Plug 'vim-pandoc/vim-pandoc-syntax'
+Plug 'fmoralesc/vim-pad' { 'branch': 'devel'}
+Plug 'vim-pandoc/vim-pandoc-after'
+Plug 'xolox/vim-notes'
+Plug 'xolox/vim-misc'
+Plug 'dhruvasagar/vim-table-mode'
+
+
+Plug 'plasticboy/vim-markdown'
 Plug 'reedes/vim-pencil'
 
 Plug 'terryma/vim-multiple-cursors'
@@ -952,6 +960,11 @@ nmap <leader>l :set list!<CR>
 " Use the same symbols as TextMate for tabstops and EOLs
 set listchars=tab:▸\ ,eol:¬
 
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Notes
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+let g:notes_directories = ['~/Notes']
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Terminal
